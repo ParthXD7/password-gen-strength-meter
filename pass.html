@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #strength {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #timeToCrack, #characterUsage {
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Password Strength Checker</h1>
+        <input type="password" id="password" placeholder="Enter your password">
+        <label>
+            <input type="checkbox" id="showPasswordCheckbox" onclick="togglePassword()"> Show Password
+        </label>
+        <div id="strength"></div>
+        <div id="timeToCrack"></div>
+        <div id="characterUsage"></div>
+    </div>
+    <script>
+        document.getElementById('password').addEventListener('input', function() {
+    var password = this.value;
+    if (password.includes(' ')) {
+        password = password.replace(/\s/g, '');
+        this.value = password;
+      
+    }
+    var strengthText = getPasswordStrength(password);
+    var strengthElement = document.getElementById('strength');
+    var timeToCrackElement = document.getElementById('timeToCrack');
+    var characterUsageElement = document.getElementById('characterUsage');
+    
+    strengthElement.textContent = strengthText;
+    strengthElement.style.color = getStrengthColor(strengthText);
+    timeToCrackElement.textContent = getTimeToCrack(password);
+    characterUsageElement.textContent = getCharacterUsage(password);
+});
+
+        function getPasswordStrength(password) {
+            if (password.length === 0) {
+                return '';
+            }
+            if (password.length < 6) {
+                return 'Weak';
+            }
+            if (password.length < 10) {
+                return 'Moderate';
+            }
+            if (!/[A-Z]/.test(password)) {
+                return 'Moderate';
+            }
+            if (!/[a-z]/.test(password)) {
+                return 'Moderate';
+            }
+            if (!/[0-9]/.test(password)) {
+                return 'Moderate';
+            }
+            if (!/[^A-Za-z0-9]/.test(password)) {
+                return 'Moderate';
+            }
+            return 'Strong';
+        }
+
+        function getStrengthColor(strengthText) {
+            switch (strengthText) {
+                case 'Weak':
+                    return 'red';
+                case 'Moderate':
+                    return 'orange';
+                case 'Strong':
+                    return 'green';
+                default:
+                    return 'black';
+            }
+        }
+
+        function getTimeToCrack(password) {
+            var secondsToCrack = estimateTimeToCrack(password);
+            return formatTime(secondsToCrack);
+        }
+
+        function estimateTimeToCrack(password) {
+            var complexity = 1;
+            if (/[A-Z]/.test(password)) complexity *= 26;
+            if (/[a-z]/.test(password)) complexity *= 26;
+            if (/[0-9]/.test(password)) complexity *= 10;
+            if (/[^A-Za-z0-9]/.test(password)) complexity *= 32; // Increased complexity due to special characters
+            var attemptsPerSecond = 1000000; // Adjust this based on assumed cracking speed
+            var totalAttempts = Math.pow(complexity, password.length);
+            return totalAttempts / attemptsPerSecond;
+        }
+        function formatTime(seconds) {
+    if (seconds < 60) {
+        return `Time to crack: ${Math.floor(seconds)} seconds`;
+    } else if (seconds < 3600) {
+        return `Time to crack: ${Math.floor(seconds / 60)} minutes`;
+    } else if (seconds < 86400) {
+        return `Time to crack: ${Math.floor(seconds / 3600)} hours`;
+    } else if (seconds < 31536000) {
+        return `Time to crack: ${Math.floor(seconds / 86400)} days`;
+    } else {
+        return `Time to crack: ${formatLargeNumber(Math.floor(seconds / 31536000))} years`;
+    }
+}
+
+
+
+
+function formatLargeNumber(number) {
+    const units = ['thousand', 'million', 'billion', 'trillion'];
+    let unitIndex = -1;
+    let numString = '';
+
+    while (number >= 1000) {
+        number /= 1000;
+        unitIndex++;
+    }
+
+    numString = Math.floor(number);
+
+    if (unitIndex >= units.length) {
+        let unitPart = '';
+        for (let i = 0; i < Math.floor(unitIndex / units.length); i++) {
+            unitPart += 'trillion ';
+        }
+        unitPart += units[unitIndex % units.length];
+        return `${numString} ${unitPart}`;
+    } else {
+        return `${numString} ${units[unitIndex]}`;
+    }
+}
+
+
+
+
+
+        function getCharacterUsage(password) {
+            let usage = [];
+            if (/[a-z]/.test(password)) usage.push("Lowercase used");
+            if (/[A-Z]/.test(password)) usage.push("Uppercase used");
+            if (/[0-9]/.test(password)) usage.push("Numbers used");
+            if (/[^A-Za-z0-9]/.test(password)) usage.push("Symbols used");
+            return usage.join(", ");
+        }
+
+        function togglePassword() {
+            var passwordField = document.getElementById('password');
+            var checkbox = document.getElementById('showPasswordCheckbox');
+            if (checkbox.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
+</body>
+</html>
