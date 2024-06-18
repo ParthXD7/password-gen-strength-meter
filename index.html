@@ -10,6 +10,7 @@
             background-color: #282c34;
             color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -91,12 +92,28 @@
         .copy-button:hover {
             background-color: #21a1f1;
         }
+
+        .generate-button {
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .generate-button:hover {
+            background-color: #21a1f1;
+        }
+
     </style>
 </head>
 <body>
+    <h1><a href="https://github.com/ParthXD7" style="color: purple; text-decoration: none;">ParthXD7</a></h1>
     <div class="container">
-        <h1><a href="https://github.com/ParthXD7" style="color: purple; text-decoration: none;">ParthXD7</a></h1>
-
         <h1>Password Strength Checker</h1>
         <input type="password" id="password" placeholder="Enter your password">
         <label>
@@ -106,6 +123,7 @@
         <div id="timeToCrack"></div>
         <div id="characterUsage"></div>
         <button class="copy-button" onclick="copyToClipboard()">Copy Password</button>
+        <button class="generate-button" onclick="generatePassword()">Generate Strong Password</button>
     </div>
     <script>
         document.getElementById('password').addEventListener('input', function() {
@@ -132,7 +150,7 @@
             if (password.length < 6) {
                 return 'Weak';
             }
-            if (password length < 10) {
+            if (password.length < 10) {
                 return 'Moderate';
             }
             if (!/[A-Z]/.test(password)) {
@@ -241,6 +259,18 @@
             passwordField.select();
             document.execCommand('copy');
             alert('Password copied to clipboard');
+        }
+
+        function generatePassword() {
+            var length = 16,
+                charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=",
+                password = "";
+            for (var i = 0, n = charset.length; i < length; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            var passwordField = document.getElementById('password');
+            passwordField.value = password;
+            passwordField.dispatchEvent(new Event('input')); // Trigger input event to update the strength and time to crack
         }
     </script>
 </body>
