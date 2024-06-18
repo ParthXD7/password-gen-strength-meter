@@ -130,7 +130,7 @@
             if (password.length < 6) {
                 return 'Weak';
             }
-            if (password.length < 10) {
+            if (password length < 10) {
                 return 'Moderate';
             }
             if (!/[A-Z]/.test(password)) {
@@ -238,7 +238,7 @@
             var passwordField = document.getElementById('password');
             passwordField.select();
             document.execCommand('copy');
-
+            alert('Password copied to clipboard');
         }
     </script>
 </body>
