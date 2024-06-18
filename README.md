@@ -9,6 +9,7 @@ Welcome to the Password Strength Checker! This tool helps you evaluate the stren
 - **Character Usage**: Check if your password includes lowercase, uppercase, numbers, and symbols.
 - **Show/Hide Password**: Toggle the visibility of your password.
 - **Copy to Clipboard**: Easily copy your password with one click.
+- **Generate Strong Passwords**: Create strong, secure passwords with a single click.
 
 ## 🎨 Design
 
@@ -24,6 +25,7 @@ The Password Strength Checker features a modern, animated design with a sleek us
 2. **Analyze Strength**: View the strength, time to crack, and character usage below the input field.
 3. **Toggle Visibility**: Use the checkbox to show or hide your password.
 4. **Copy Password**: Click the "Copy Password" button to copy the password to your clipboard.
+5. **Generate Strong Password**: Click the "Generate Strong Password" button to create a secure password.
 
 ## 🛠️ Setup
 
