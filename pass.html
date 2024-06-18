@@ -6,8 +6,9 @@
     <title>Password Strength Checker</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #282c34;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,23 +17,54 @@
         }
 
         .container {
-            background-color: #fff;
+            background-color: #3b3f4a;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
+            width: 90%;
+            max-width: 400px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
             margin-bottom: 20px;
+            color: #61dafb;
+            font-size: 1.5em;
         }
 
-        input {
-            width: 100%;
+        input[type="password"], input[type="text"] {
+            width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #61dafb;
+            color: #282c34;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #21a1f1;
+            transform: scale(1.05);
         }
 
         #strength {
@@ -43,6 +75,21 @@
         #timeToCrack, #characterUsage {
             margin-top: 5px;
             font-style: italic;
+        }
+
+        .copy-button {
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .copy-button:hover {
+            background-color: #21a1f1;
         }
     </style>
 </head>
@@ -56,25 +103,25 @@
         <div id="strength"></div>
         <div id="timeToCrack"></div>
         <div id="characterUsage"></div>
+        <button class="copy-button" onclick="copyToClipboard()">Copy Password</button>
     </div>
     <script>
         document.getElementById('password').addEventListener('input', function() {
-    var password = this.value;
-    if (password.includes(' ')) {
-        password = password.replace(/\s/g, '');
-        this.value = password;
-      
-    }
-    var strengthText = getPasswordStrength(password);
-    var strengthElement = document.getElementById('strength');
-    var timeToCrackElement = document.getElementById('timeToCrack');
-    var characterUsageElement = document.getElementById('characterUsage');
-    
-    strengthElement.textContent = strengthText;
-    strengthElement.style.color = getStrengthColor(strengthText);
-    timeToCrackElement.textContent = getTimeToCrack(password);
-    characterUsageElement.textContent = getCharacterUsage(password);
-});
+            var password = this.value;
+            if (password.includes(' ')) {
+                password = password.replace(/\s/g, '');
+                this.value = password;
+            }
+            var strengthText = getPasswordStrength(password);
+            var strengthElement = document.getElementById('strength');
+            var timeToCrackElement = document.getElementById('timeToCrack');
+            var characterUsageElement = document.getElementById('characterUsage');
+
+            strengthElement.textContent = strengthText;
+            strengthElement.style.color = getStrengthColor(strengthText);
+            timeToCrackElement.textContent = getTimeToCrack(password);
+            characterUsageElement.textContent = getCharacterUsage(password);
+        });
 
         function getPasswordStrength(password) {
             if (password.length === 0) {
@@ -129,50 +176,44 @@
             var totalAttempts = Math.pow(complexity, password.length);
             return totalAttempts / attemptsPerSecond;
         }
+
         function formatTime(seconds) {
-    if (seconds < 60) {
-        return `Time to crack: ${Math.floor(seconds)} seconds`;
-    } else if (seconds < 3600) {
-        return `Time to crack: ${Math.floor(seconds / 60)} minutes`;
-    } else if (seconds < 86400) {
-        return `Time to crack: ${Math.floor(seconds / 3600)} hours`;
-    } else if (seconds < 31536000) {
-        return `Time to crack: ${Math.floor(seconds / 86400)} days`;
-    } else {
-        return `Time to crack: ${formatLargeNumber(Math.floor(seconds / 31536000))} years`;
-    }
-}
-
-
-
-
-function formatLargeNumber(number) {
-    const units = ['thousand', 'million', 'billion', 'trillion'];
-    let unitIndex = -1;
-    let numString = '';
-
-    while (number >= 1000) {
-        number /= 1000;
-        unitIndex++;
-    }
-
-    numString = Math.floor(number);
-
-    if (unitIndex >= units.length) {
-        let unitPart = '';
-        for (let i = 0; i < Math.floor(unitIndex / units.length); i++) {
-            unitPart += 'trillion ';
+            if (seconds < 60) {
+                return `Time to crack: ${Math.floor(seconds)} seconds`;
+            } else if (seconds < 3600) {
+                return `Time to crack: ${Math.floor(seconds / 60)} minutes`;
+            } else if (seconds < 86400) {
+                return `Time to crack: ${Math.floor(seconds / 3600)} hours`;
+            } else if (seconds < 31536000) {
+                return `Time to crack: ${Math.floor(seconds / 86400)} days`;
+            } else {
+                return `Time to crack: ${formatLargeNumber(Math.floor(seconds / 31536000))} years`;
+            }
         }
-        unitPart += units[unitIndex % units.length];
-        return `${numString} ${unitPart}`;
-    } else {
-        return `${numString} ${units[unitIndex]}`;
-    }
-}
 
+        function formatLargeNumber(number) {
+            const units = ['thousand', 'million', 'billion', 'trillion'];
+            let unitIndex = -1;
+            let numString = '';
 
+            while (number >= 1000) {
+                number /= 1000;
+                unitIndex++;
+            }
 
+            numString = Math.floor(number);
 
+            if (unitIndex >= units.length) {
+                let unitPart = '';
+                for (let i = 0; i < Math.floor(unitIndex / units.length); i++) {
+                    unitPart += 'trillion ';
+                }
+                unitPart += units[unitIndex % units.length];
+                return `${numString} ${unitPart}`;
+            } else {
+                return `${numString} ${units[unitIndex]}`;
+            }
+        }
 
         function getCharacterUsage(password) {
             let usage = [];
@@ -191,6 +232,13 @@ function formatLargeNumber(number) {
             } else {
                 passwordField.type = 'password';
             }
+        }
+
+        function copyToClipboard() {
+            var passwordField = document.getElementById('password');
+            passwordField.select();
+            document.execCommand('copy');
+
         }
     </script>
 </body>
